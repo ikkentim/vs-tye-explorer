@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="TimsTyeExplorer.3754379a-9eb2-4bed-9e52-61a97a6bfc61" Version="0.1" Language="en-US" Publisher="Tim Potze" />
-    <DisplayName>TimsTyeExplorer</DisplayName>
-    <Description xml:space="preserve">Tim's Tye Explorer. Explore Tye services and attach to Tye processes.</Description>
-    <MoreInfo>https://github.com/ikkentim/vs-tye-explorer</MoreInfo>
-    <License>LICENSE.txt</License>
-    <Icon>Resources\TimsTyeExplorerLogo.png</Icon>
-    <PreviewImage>TimsTyeExplorerLogo.png</PreviewImage>
-    <Tags>tye</Tags>
-  </Metadata>
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0)" />
-  </Installation>
-  <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-  </Dependencies>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0)" DisplayName="Visual Studio core editor" />
-  </Prerequisites>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="TyeExplorer" Path="|TyeExplorer;PkgdefProjectOutputGroup|" />
-  </Assets>
+    <Metadata>
+        <Identity Id="TimsTyeExplorer.3754379a-9eb2-4bed-9e52-61a97a6bfc61" Version="0.1" Language="en-US" Publisher="Tim Potze" />
+        <DisplayName>TimsTyeExplorer</DisplayName>
+        <Description xml:space="preserve">Tim's Tye Explorer. Explore Tye services and attach to Tye processes. Open the explorer through "View -&gt; Other Windows -&gt; Tye Explorer", refresh the list (with Tye running) and </Description>
+        <MoreInfo>https://github.com/ikkentim/vs-tye-explorer</MoreInfo>
+        <License>LICENSE.txt</License>
+        <Icon>Resources\TimsTyeExplorerLogo.png</Icon>
+        <PreviewImage>TimsTyeExplorerLogo.png</PreviewImage>
+        <Tags>tye</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0)" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="TyeExplorer" Path="|TyeExplorer;PkgdefProjectOutputGroup|" />
+    </Assets>
 </PackageManifest>
