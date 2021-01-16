@@ -2,16 +2,18 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
         <Identity Id="TimsTyeExplorer.3754379a-9eb2-4bed-9e52-61a97a6bfc61" Version="0.1" Language="en-US" Publisher="Tim Potze" />
-        <DisplayName>TimsTyeExplorer</DisplayName>
+        <DisplayName>Tim's Tye Explorer</DisplayName>
         <Description xml:space="preserve">Tim's Tye Explorer. Explore Tye services and attach to Tye processes. Open the explorer through "View -&gt; Other Windows -&gt; Tye Explorer", refresh the list (with Tye running) and </Description>
         <MoreInfo>https://github.com/ikkentim/vs-tye-explorer</MoreInfo>
         <License>LICENSE.txt</License>
-        <Icon>Resources\TimsTyeExplorerLogo.png</Icon>
+        <Icon>TimsTyeExplorerLogo.png</Icon>
         <PreviewImage>TimsTyeExplorerLogo.png</PreviewImage>
         <Tags>tye</Tags>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0)" />
+        <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
+        <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
