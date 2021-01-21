@@ -45,8 +45,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\AttachToSelectedCommand.cs" />
+    <Compile Include="Commands\AttachToStartupProjectsCommand.cs" />
+    <Compile Include="Services\DebuggerAttacher.cs" />
+    <Compile Include="Services\RunAllAvailabilityChangedEventArgs.cs" />
+    <Compile Include="Services\ServiceRequestFailureEventArgs.cs" />
+    <Compile Include="Services\TyeCommandManager.cs" />
+    <Compile Include="Commands\AttachToAllCommand.cs" />
     <Compile Include="Commands\OpenTyeDashboardCommand.cs" />
     <Compile Include="Commands\ReloadTyeExplorerCommand.cs" />
+    <Compile Include="Commands\TyeCommand.cs" />
+    <Compile Include="Services\SessionConfiguration.cs" />
+    <Compile Include="Services\TyeServicesProvider.cs" />
+    <Compile Include="ToolWindows\AttachToServiceEventArgs.cs" />
+    <Compile Include="Services\TyeExplorerServices.cs" />
     <Compile Include="Tye\Models\ReplicaState.cs" />
     <Compile Include="Tye\Models\ServiceType.cs" />
     <Compile Include="Tye\Models\V1ConfigurationSource.cs" />
@@ -65,10 +77,9 @@
     <Compile Include="ToolWindows\TyeExplorerToolWindowControl.xaml.cs">
       <DependentUpon>TyeExplorerToolWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tye\TyeApiConnector.cs" />
+    <Compile Include="Services\ServicesReceivedEventArgs.cs" />
     <Compile Include="TyeExplorerGuids.cs" />
     <Compile Include="TyeExplorerPackage.cs" />
-    <Compile Include="Tye\TyeApiServicesResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -106,6 +117,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="notes.txt" />
     <Content Include="Resources\Images.png" />
     <Content Include="TimsTyeExplorerLogo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

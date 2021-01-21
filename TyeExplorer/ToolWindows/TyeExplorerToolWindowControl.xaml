@@ -10,14 +10,19 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="TyeExplorer">
     <UserControl.Resources>
-        <ContextMenu x:Key="ContextMenuReplica">
-            <MenuItem Header="Attach debugger to process" Click="OnClickAttachDebuggerToProcess" />
+        <ContextMenu x:Key="ContextMenuService">
+            <MenuItem Header="Attach debugger" Click="MenuItemOnClickAttachDebugger" />
+            <MenuItem Name="MenuItemToggleAttach" Header="Exclude from &quot;Attach to all&quot;" Click="MenuItemOnClickToggleAttach" />
+        </ContextMenu>
+        <ContextMenu x:Key="ContextMenuUnavailable">
+            <MenuItem IsEnabled="False" Header="Service cannot be attached to" />
         </ContextMenu>
     </UserControl.Resources>
     <Grid>
         <TreeView Name="TreeView" 
                   HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"
+                  SelectedItemChanged="TreeViewOnSelectedItemChanged"
                   Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" 
                   Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTextKey}}"
                   BorderBrush="Transparent">

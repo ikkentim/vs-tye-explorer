@@ -1,0 +1,6 @@
+﻿toolbar
+https://docs.microsoft.com/en-us/visualstudio/extensibility/adding-a-toolbar-to-a-tool-window?view=vs-2019
+
+
+output window
+https://stackoverflow.com/questions/1094366/how-do-i-write-to-the-visual-studio-output-window-in-my-custom-tool
