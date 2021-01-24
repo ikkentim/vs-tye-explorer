@@ -19,7 +19,7 @@ namespace TyeExplorer.Commands
 
 		public AttachToStartupProjectsCommand(TyeServicesProvider tyeServicesProvider, DebuggerAttacher debuggerAttacher, TyeExplorerLogger _logger) :
 			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.AttachToStartupProjectsCommandId)
+				TyeExplorerGuids.AttachStartupProjects)
 		{
 			_tyeServicesProvider = tyeServicesProvider;
 			_debuggerAttacher = debuggerAttacher;

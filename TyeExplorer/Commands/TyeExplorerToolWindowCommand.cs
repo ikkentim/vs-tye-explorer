@@ -7,7 +7,7 @@ namespace TyeExplorer.Commands
 	{
 		public TyeExplorerToolWindowCommand()
 			: base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.ToolWindowCommandId)
+				TyeExplorerGuids.OpenWindow)
 		{
 		}
 

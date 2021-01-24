@@ -129,6 +129,7 @@
     </Content>
     <VSCTCompile Include="TyeExplorerPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+	  <SubType>Debug</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup />

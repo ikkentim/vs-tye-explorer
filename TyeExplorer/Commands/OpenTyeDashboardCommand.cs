@@ -10,7 +10,7 @@ namespace TyeExplorer.Commands
 	{
 		public OpenTyeDashboardCommand() : 
 			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.OpenTyeDashboardCommandId)
+				TyeExplorerGuids.OpenDashboard)
 		{
 		}
 		

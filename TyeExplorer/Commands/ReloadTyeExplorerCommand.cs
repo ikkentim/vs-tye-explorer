@@ -11,7 +11,7 @@ namespace TyeExplorer.Commands
 
 		public ReloadTyeExplorerCommand(TyeServicesProvider apiConnector) :
 			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.ReloadTyeExplorerCommandId)
+				TyeExplorerGuids.ReloadServices)
 		{
 			_apiConnector = apiConnector;
 		}

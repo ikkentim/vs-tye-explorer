@@ -14,7 +14,7 @@ namespace TyeExplorer.Commands
 
 		public AttachToAllCommand(TyeServicesProvider tyeServicesProvider, DebuggerAttacher debuggerAttacher) :
 			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.AttachToAllCommandId)
+				TyeExplorerGuids.AttachAll)
 		{
 			_tyeServicesProvider = tyeServicesProvider;
 			_debuggerAttacher = debuggerAttacher;
