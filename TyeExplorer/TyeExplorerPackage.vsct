@@ -48,6 +48,7 @@
           <CommandName>TyeExplorer_ReloadServices</CommandName>
           <ButtonText>Reload</ButtonText>
           <MenuText>Reload</MenuText>
+          <LocCanonicalName>TyeExplorer_ReloadServices</LocCanonicalName>
         </Strings>
       </Button>
 
@@ -58,6 +59,7 @@
           <CommandName>TyeExplorer_OpenDashboard</CommandName>
           <ButtonText>Open Dashboard</ButtonText>
           <MenuText>Reload</MenuText>
+          <LocCanonicalName>TyeExplorer_OpenDashboard</LocCanonicalName>
         </Strings>
       </Button>
 
@@ -67,6 +69,7 @@
         <Strings>
           <CommandName>TyeExplorer_OpenLoggingSelected</CommandName>
           <ButtonText>Open Output for selected service</ButtonText>
+          <LocCanonicalName>TyeExplorer_OpenLoggingSelected</LocCanonicalName>
         </Strings>
       </Button>
 
@@ -79,6 +82,7 @@
           <CommandName>TyeExplorer_AttachSelected</CommandName>
           <ButtonText>Attach to selected</ButtonText>
           <ToolTipText>Attach to the selected service/replica in the Tye Explorer.</ToolTipText>
+          <LocCanonicalName>TyeExplorer_AttachSelected</LocCanonicalName>
         </Strings>
       </Button>
 
@@ -90,6 +94,7 @@
           <CommandName>TyeExplorer_AttachAll</CommandName>
           <ButtonText>Attach to all replicas</ButtonText>
           <ToolTipText>Attach to all replicas in all services except services/replicas marked as excluded.</ToolTipText>
+          <LocCanonicalName>TyeExplorer_AttachAll</LocCanonicalName>
         </Strings>
       </Button>
 
@@ -101,6 +106,7 @@
           <CommandName>TyeExplorer_AttachStartupProjects</CommandName>
           <ButtonText>Attach to startup projects</ButtonText>
           <ToolTipText>Attach to the the services with names matching the startup project(s) of the loaded solution. Please note this only works if the service names match the project names.</ToolTipText>
+          <LocCanonicalName>TyeExplorer_AttachStartupProjects</LocCanonicalName>
         </Strings>
       </Button>
 
