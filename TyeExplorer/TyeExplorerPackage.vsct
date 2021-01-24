@@ -5,15 +5,16 @@
 
   <Commands package="guidTyeExplorerPackage">
     <Menus>
-      <Menu guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" type="ToolWindowToolbar">
-        <CommandFlag>DefaultDocked</CommandFlag>
+
+      <Menu guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar" type="ToolWindowToolbar">
         <Strings>
           <ButtonText>Tye Toolbar</ButtonText>
           <CommandName>Tye Toolbar</CommandName>
         </Strings>
       </Menu>
+
       <Menu guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" type="MenuController" priority="0x0010" toolbarPriorityInBand="0x0010">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuServiceGroup" />
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar_Services" />
         <CommandFlag>IconAndText</CommandFlag>
         <CommandFlag>TextIsAnchorCommand</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
@@ -22,66 +23,81 @@
           <CommandName>Tye Attach Options</CommandName>
         </Strings>
       </Menu>
+
     </Menus>
 
     <Buttons>
 
       <!-- Tye Explorer button nested into "other windows 1" -->
-      <Button guid="guidTyeExplorerPackageCmdSet" id="TyeExplorerToolWindowCommandId" priority="0x0100" type="Button">
+      <Button guid="guidTyeExplorerCmdSet" id="TyeExplorer_OpenWindow" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
         <Icon guid="guidImages" id="bmpLogo" />
         <Strings>
+          <CommandName>TyeExplorer_OpenWindow</CommandName>
           <ButtonText>Tye Explorer</ButtonText>
+          <MenuText>Tye Explorer</MenuText>
         </Strings>
       </Button>
 
       <!-- Tye Explorer menu buttons -->
-      <Button guid="guidTyeExplorerCmdSet" id="cmdidReloadTyeExplorerCommand" priority="0x002" type="Button">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGeneralGroup" />
+      <Button guid="guidTyeExplorerCmdSet" id="TyeExplorer_ReloadServices" priority="0x002" type="Button">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar_General" />
         <Icon guid="guidImages" id="bmpReload" />
         <Strings>
+          <CommandName>TyeExplorer_ReloadServices</CommandName>
           <ButtonText>Reload</ButtonText>
+          <MenuText>Reload</MenuText>
         </Strings>
       </Button>
-      <Button guid="guidTyeExplorerCmdSet" id="cmdidOpenTyeDashboardCommand" priority="0x001" type="Button">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGeneralGroup" />
+
+      <Button guid="guidTyeExplorerCmdSet" id="TyeExplorer_OpenDashboard" priority="0x001" type="Button">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar_General" />
         <Icon guid="guidImages" id="bmpHome" />
         <Strings>
+          <CommandName>TyeExplorer_OpenDashboard</CommandName>
           <ButtonText>Open Dashboard</ButtonText>
+          <MenuText>Reload</MenuText>
         </Strings>
       </Button>
-      <Button guid="guidTyeExplorerCmdSet" id="cmdIdOpenSelectedServiceLoggingCommand" priority="0x101" type="Button">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuServiceGroup" />
+
+      <Button guid="guidTyeExplorerCmdSet" id="TyeExplorer_OpenLoggingSelected" priority="0x101" type="Button">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar_Services" />
         <Icon guid="guidImages" id="bmpOutput" />
         <Strings>
+          <CommandName>TyeExplorer_OpenLoggingSelected</CommandName>
           <ButtonText>Open Output for selected service</ButtonText>
         </Strings>
       </Button>
 
       <!-- "Attach submenu" buttons -->
-      <Button guid="guidTyeExplorerCmdSet" id="cmdidAttachToSelectedCommand" priority="0x001" type="Button">
+      <Button guid="guidTyeExplorerCmdSet" id="TyeExplorer_AttachSelected" priority="0x001" type="Button">
         <Parent guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" />
         <Icon guid="guidImages" id="bmpProcess" />
         <CommandFlag>Pict</CommandFlag>
         <Strings>
+          <CommandName>TyeExplorer_AttachSelected</CommandName>
           <ButtonText>Attach to selected</ButtonText>
           <ToolTipText>Attach to the selected service/replica in the Tye Explorer.</ToolTipText>
         </Strings>
       </Button>
-      <Button guid="guidTyeExplorerCmdSet" id="cmdidAttachToAllCommand" priority="0x002" type="Button">
+
+      <Button guid="guidTyeExplorerCmdSet" id="TyeExplorer_AttachAll" priority="0x002" type="Button">
         <Parent guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" />
         <Icon guid="guidImages" id="bmpProcess" />
         <CommandFlag>Pict</CommandFlag>
         <Strings>
+          <CommandName>TyeExplorer_AttachAll</CommandName>
           <ButtonText>Attach to all replicas</ButtonText>
           <ToolTipText>Attach to all replicas in all services except services/replicas marked as excluded.</ToolTipText>
         </Strings>
       </Button>
-      <Button guid="guidTyeExplorerCmdSet" id="cmdIdAttachToStartupProjectsCommand" priority="0x003" type="Button">
+
+      <Button guid="guidTyeExplorerCmdSet" id="TyeExplorer_AttachStartupProjects" priority="0x003" type="Button">
         <Parent guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" />
         <Icon guid="guidImages" id="bmpProcess" />
         <CommandFlag>Pict</CommandFlag>
         <Strings>
+          <CommandName>TyeExplorer_AttachStartupProjects</CommandName>
           <ButtonText>Attach to startup projects</ButtonText>
           <ToolTipText>Attach to the the services with names matching the startup project(s) of the loaded solution. Please note this only works if the service names match the project names.</ToolTipText>
         </Strings>
@@ -89,19 +105,19 @@
 
     </Buttons>
 
-
     <Bitmaps>
       <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpLogo, bmpReload, bmpHome, bmpProcess, bmpOutput, bmpPicStrikethrough" />
     </Bitmaps>
+
     <Groups>
-      <Group guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" priority="0x0600">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      <Group guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar" priority="0x0600">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar" />
       </Group>
-      <Group guid="guidTyeExplorerCmdSet" id="TyeMenuGeneralGroup" priority="0x0010">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      <Group guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar_General" priority="0x0010">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar" />
       </Group>
-      <Group guid="guidTyeExplorerCmdSet" id="TyeMenuServiceGroup" priority="0x0020">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      <Group guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar_Services" priority="0x0020">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeExplorer_ToolBar" />
       </Group>
       <Group guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" priority="0x0001">
         <Parent guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" />
@@ -110,38 +126,41 @@
   </Commands>
 
   <Symbols>
-    <!-- Tye Explorer package -->
-    <GuidSymbol name="guidTyeExplorerPackage" value="{1e58a7e2-226e-4353-95ec-8d4e88408a19}" />
+    <GuidSymbol value="{1e58a7e2-226e-4353-95ec-8d4e88408a19}" name="guidTyeExplorerPackage" />
 
-    <!-- Tye Explorer menu in "view -> other windows" -->
-    <GuidSymbol name="guidTyeExplorerPackageCmdSet" value="{a0488ed6-900f-4269-8ade-e553c893a61c}">
-      <IDSymbol name="TyeExplorerToolWindowCommandId" value="0x0100" />
-    </GuidSymbol>
-
-    <!-- Tye Explorer menu bar in tool window -->
     <GuidSymbol value="{0ccfef2f-31d2-4ac0-9bff-69faba97a675}" name="guidTyeExplorerCmdSet">
-      <IDSymbol value="4128" name="TyeMenuGroup" />
-      <IDSymbol value="1" name="TyeMenuGeneralGroup" />
-      <IDSymbol value="2" name="TyeMenuServiceGroup" />
-      <IDSymbol value="256" name="cmdidReloadTyeExplorerCommand" />
-      <IDSymbol value="512" name="cmdidOpenTyeDashboardCommand" />
+      <IDSymbol value="15" name="TyeExplorer_OpenWindow"/>
+
+      <IDSymbol value="4128" name="TyeExplorer_ToolBar" />
+      <IDSymbol value="1" name="TyeExplorer_ToolBar_General" />
+      <IDSymbol value="2" name="TyeExplorer_ToolBar_Services" />
+      <IDSymbol value="256" name="TyeExplorer_ReloadServices" />
+      <IDSymbol value="512" name="TyeExplorer_OpenDashboard" />
 
       <IDSymbol value="2048" name="TyeAttachMenuGroup" />
-      <IDSymbol value="5" name="cmdidAttachToSelectedCommand" />
-      <IDSymbol value="1024" name="cmdidAttachToAllCommand" />
-      <IDSymbol value="6" name="cmdIdAttachToStartupProjectsCommand" />
-      <IDSymbol value="7" name="cmdIdOpenSelectedServiceLoggingCommand" />
+      <IDSymbol value="5" name="TyeExplorer_AttachSelected" />
+      <IDSymbol value="1024" name="TyeExplorer_AttachAll" />
+      <IDSymbol value="6" name="TyeExplorer_AttachStartupProjects" />
+      <IDSymbol value="7" name="TyeExplorer_OpenLoggingSelected" />
     </GuidSymbol>
 
-    <!-- Menu icons -->
-    <GuidSymbol name="guidImages" value="{65097361-2cf4-4df2-a8cc-f359b02a51ba}">
-      <IDSymbol name="bmpLogo" value="1" />
-      <IDSymbol name="bmpReload" value="2" />
-      <IDSymbol name="bmpHome" value="3" />
-      <IDSymbol name="bmpProcess" value="4" />
-      <IDSymbol name="bmpOutput" value="5" />
-      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    <GuidSymbol value="{65097361-2cf4-4df2-a8cc-f359b02a51ba}" name="guidImages">
+      <IDSymbol value="1" name="bmpLogo" />
+      <IDSymbol value="2" name="bmpReload" />
+      <IDSymbol value="3" name="bmpHome" />
+      <IDSymbol value="4" name="bmpProcess" />
+      <IDSymbol value="5" name="bmpOutput" />
+      <IDSymbol value="6" name="bmpPicStrikethrough" />
     </GuidSymbol>
   
   </Symbols>
+  
+  <KeyBindings>
+    <KeyBinding guid="guidTyeExplorerCmdSet" id="TyeExplorer_ReloadServices" editor="guidVSStd97" mod1="Alt" key1="Y" key2="R" />
+    <KeyBinding guid="guidTyeExplorerCmdSet" id="TyeExplorer_OpenDashboard" editor="guidVSStd97" mod1="Alt" key1="Y" key2="D" />
+    <KeyBinding guid="guidTyeExplorerCmdSet" id="TyeExplorer_AttachAll" editor="guidVSStd97" mod1="Alt" key1="Y" key2="A" />
+    <KeyBinding guid="guidTyeExplorerCmdSet" id="TyeExplorer_AttachStartupProjects" editor="guidVSStd97" mod1="Alt" key1="Y" key2="Y" />
+    <KeyBinding guid="guidTyeExplorerCmdSet" id="TyeExplorer_AttachSelected" editor="guidVSStd97" mod1="Alt" key1="Y" key2="S" />
+    <KeyBinding guid="guidTyeExplorerCmdSet" id="TyeExplorer_OpenLoggingSelected" editor="guidVSStd97" mod1="Alt" key1="Y" key2="L" />
+  </KeyBindings>
 </CommandTable>

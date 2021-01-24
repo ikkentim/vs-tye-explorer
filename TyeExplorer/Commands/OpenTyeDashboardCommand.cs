@@ -9,7 +9,7 @@ namespace TyeExplorer.Commands
 	internal sealed class OpenTyeDashboardCommand :TyeCommand
 	{
 		public OpenTyeDashboardCommand() : 
-			base(new Guid(TyeExplorerGuids.TyeExplorerToolbarCmdSet),
+			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
 				TyeExplorerGuids.OpenTyeDashboardCommandId)
 		{
 		}

@@ -22,7 +22,7 @@ namespace TyeExplorer.Services
 
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
 
-			var id = new Guid(TyeExplorerGuids.TyeExplorerLogWindow);
+			var id = new Guid(TyeExplorerGuids.GuidTyeExplorerLogWindow);
 			outWindow.CreatePane(ref id, "Tye Explorer", 1, 0);
 			outWindow.GetPane(ref id, out _pane);
 		}

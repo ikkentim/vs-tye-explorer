@@ -12,7 +12,7 @@ namespace TyeExplorer.Commands
 		private readonly DebuggerAttacher _debuggerAttacher;
 
 		public AttachToSelectedCommand(TyeServicesProvider tyeServicesProvider, DebuggerAttacher debuggerAttacher) :
-			base(new Guid(TyeExplorerGuids.TyeExplorerToolbarCmdSet),
+			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
 				TyeExplorerGuids.AttachToSelectedCommandId)
 		{
 			_tyeServicesProvider = tyeServicesProvider;
@@ -40,7 +40,7 @@ namespace TyeExplorer.Commands
 		private readonly TyeServiceOutputManager _tyeServiceOutputManager;
 
 		public OpenSelectedServiceLoggingCommand(TyeServicesProvider tyeServicesProvider, TyeServiceOutputManager tyeServiceOutputManager) :
-			base(new Guid(TyeExplorerGuids.TyeExplorerToolbarCmdSet),
+			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
 				TyeExplorerGuids.OpenSelectedServiceLoggingCommandId)
 		{
 			_tyeServicesProvider = tyeServicesProvider;

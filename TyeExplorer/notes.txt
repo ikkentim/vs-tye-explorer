@@ -4,3 +4,6 @@ https://docs.microsoft.com/en-us/visualstudio/extensibility/adding-a-toolbar-to-
 
 output window
 https://stackoverflow.com/questions/1094366/how-do-i-write-to-the-visual-studio-output-window-in-my-custom-tool
+
+keycodes
+https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

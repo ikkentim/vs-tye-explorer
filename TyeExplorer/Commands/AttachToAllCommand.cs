@@ -13,7 +13,7 @@ namespace TyeExplorer.Commands
 		private readonly DebuggerAttacher _debuggerAttacher;
 
 		public AttachToAllCommand(TyeServicesProvider tyeServicesProvider, DebuggerAttacher debuggerAttacher) :
-			base(new Guid(TyeExplorerGuids.TyeExplorerToolbarCmdSet),
+			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
 				TyeExplorerGuids.AttachToAllCommandId)
 		{
 			_tyeServicesProvider = tyeServicesProvider;

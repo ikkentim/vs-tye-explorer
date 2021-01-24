@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using TyeExplorer.Services;
 using Task = System.Threading.Tasks.Task;
 
@@ -26,7 +27,7 @@ namespace TyeExplorer
 	/// </remarks>
 	[PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
 	[Guid(PackageGuidString)]
-	[ProvideMenuResource("Menus.ctmenu", 1)]
+	[ProvideMenuResource("Menus.ctmenu", 2)]
 	[ProvideToolWindow(typeof(TyeExplorerToolWindow))]
 	public sealed class TyeExplorerPackage : AsyncPackage
 	{
@@ -34,7 +35,7 @@ namespace TyeExplorer
 		/// TyeExplorerPackage GUID string.
 		/// </summary>
 		public const string PackageGuidString = "1e58a7e2-226e-4353-95ec-8d4e88408a19";
-
+		
 		#region Package Members
 
 		/// <summary>

@@ -18,7 +18,7 @@ namespace TyeExplorer.Commands
 		private readonly TyeExplorerLogger _logger;
 
 		public AttachToStartupProjectsCommand(TyeServicesProvider tyeServicesProvider, DebuggerAttacher debuggerAttacher, TyeExplorerLogger _logger) :
-			base(new Guid(TyeExplorerGuids.TyeExplorerToolbarCmdSet),
+			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
 				TyeExplorerGuids.AttachToStartupProjectsCommandId)
 		{
 			_tyeServicesProvider = tyeServicesProvider;
