@@ -126,7 +126,13 @@ namespace TyeExplorer.Services
 					return;
 				}
 
-				await Task.Delay(TimeSpan.FromSeconds(2), token);
+				try
+				{
+					await Task.Delay(TimeSpan.FromSeconds(2), token);
+				}
+				catch (TaskCanceledException)
+				{
+				}
 			}
 		}
 
