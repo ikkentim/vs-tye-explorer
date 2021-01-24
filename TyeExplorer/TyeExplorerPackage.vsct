@@ -12,8 +12,8 @@
           <CommandName>Tye Toolbar</CommandName>
         </Strings>
       </Menu>
-      <Menu guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" type="MenuController" priority="0x0100" toolbarPriorityInBand="0x0100">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      <Menu guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" type="MenuController" priority="0x0010" toolbarPriorityInBand="0x0010">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuServiceGroup" />
         <CommandFlag>IconAndText</CommandFlag>
         <CommandFlag>TextIsAnchorCommand</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
@@ -24,17 +24,7 @@
       </Menu>
     </Menus>
 
-    <!--Buttons section. -->
-    <!--This section defines the elements the user can interact with, like a menu command or a button
-        or combo box in a toolbar. -->
     <Buttons>
-      <!--To define a menu group you have to specify its ID, the parent menu and its display priority.
-          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
-          the CommandFlag node.
-          You can add more than one CommandFlag node e.g.:
-              <CommandFlag>DefaultInvisible</CommandFlag>
-              <CommandFlag>DynamicVisibility</CommandFlag>
-          If you do not want an image next to your command, remove the Icon node /> -->
 
       <!-- Tye Explorer button nested into "other windows 1" -->
       <Button guid="guidTyeExplorerPackageCmdSet" id="TyeExplorerToolWindowCommandId" priority="0x0100" type="Button">
@@ -46,18 +36,25 @@
       </Button>
 
       <!-- Tye Explorer menu buttons -->
-      <Button guid="guidTyeExplorerCmdSet" id="cmdidReloadTyeExplorerCommand" priority="0x001" type="Button">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      <Button guid="guidTyeExplorerCmdSet" id="cmdidReloadTyeExplorerCommand" priority="0x002" type="Button">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGeneralGroup" />
         <Icon guid="guidImages" id="bmpReload" />
         <Strings>
           <ButtonText>Reload</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidTyeExplorerCmdSet" id="cmdidOpenTyeDashboardCommand" priority="0x002" type="Button">
-        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      <Button guid="guidTyeExplorerCmdSet" id="cmdidOpenTyeDashboardCommand" priority="0x001" type="Button">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGeneralGroup" />
         <Icon guid="guidImages" id="bmpHome" />
         <Strings>
           <ButtonText>Open Dashboard</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidTyeExplorerCmdSet" id="cmdIdOpenSelectedServiceLoggingCommand" priority="0x101" type="Button">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuServiceGroup" />
+        <Icon guid="guidImages" id="bmpOutput" />
+        <Strings>
+          <ButtonText>Open Output for selected service</ButtonText>
         </Strings>
       </Button>
 
@@ -80,7 +77,6 @@
           <ToolTipText>Attach to all replicas in all services except services/replicas marked as excluded.</ToolTipText>
         </Strings>
       </Button>
-
       <Button guid="guidTyeExplorerCmdSet" id="cmdIdAttachToStartupProjectsCommand" priority="0x003" type="Button">
         <Parent guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" />
         <Icon guid="guidImages" id="bmpProcess" />
@@ -95,10 +91,16 @@
 
 
     <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpLogo, bmpReload, bmpHome, bmpProcess, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpLogo, bmpReload, bmpHome, bmpProcess, bmpOutput, bmpPicStrikethrough" />
     </Bitmaps>
     <Groups>
       <Group guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" priority="0x0600">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      </Group>
+      <Group guid="guidTyeExplorerCmdSet" id="TyeMenuGeneralGroup" priority="0x0010">
+        <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
+      </Group>
+      <Group guid="guidTyeExplorerCmdSet" id="TyeMenuServiceGroup" priority="0x0020">
         <Parent guid="guidTyeExplorerCmdSet" id="TyeMenuGroup" />
       </Group>
       <Group guid="guidTyeExplorerCmdSet" id="TyeAttachMenuGroup" priority="0x0001">
@@ -119,6 +121,8 @@
     <!-- Tye Explorer menu bar in tool window -->
     <GuidSymbol value="{0ccfef2f-31d2-4ac0-9bff-69faba97a675}" name="guidTyeExplorerCmdSet">
       <IDSymbol value="4128" name="TyeMenuGroup" />
+      <IDSymbol value="1" name="TyeMenuGeneralGroup" />
+      <IDSymbol value="2" name="TyeMenuServiceGroup" />
       <IDSymbol value="256" name="cmdidReloadTyeExplorerCommand" />
       <IDSymbol value="512" name="cmdidOpenTyeDashboardCommand" />
 
@@ -126,6 +130,7 @@
       <IDSymbol value="5" name="cmdidAttachToSelectedCommand" />
       <IDSymbol value="1024" name="cmdidAttachToAllCommand" />
       <IDSymbol value="6" name="cmdIdAttachToStartupProjectsCommand" />
+      <IDSymbol value="7" name="cmdIdOpenSelectedServiceLoggingCommand" />
     </GuidSymbol>
 
     <!-- Menu icons -->
@@ -134,7 +139,7 @@
       <IDSymbol name="bmpReload" value="2" />
       <IDSymbol name="bmpHome" value="3" />
       <IDSymbol name="bmpProcess" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpOutput" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
   

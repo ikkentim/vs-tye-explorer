@@ -37,7 +37,9 @@ namespace TyeExplorer
 			ToolBar = new CommandID(new Guid(TyeExplorerGuids.TyeExplorerToolbarCmdSet), TyeExplorerGuids.TyeExplorerToolbar);
 			
 			_control.AttachToReplica += OnAttachToReplica;
+			_control.AttachToService += OnAttachToService;
 			_control.SelectedItemChanged += OnSelectedItemChanged;
+			_control.ShowServiceLogs += OnShowServiceLogs;
 			
 			// TODO: Remove handler at some point? When?
 			var servicesProvider = TyeExplorerServices.Get<TyeServicesProvider>();
@@ -45,21 +47,31 @@ namespace TyeExplorer
 			servicesProvider.ServicesReceived += OnServicesReceived;
 			servicesProvider.ServiceRequestFailure += ServicesProviderOnServiceRequestFailure;
 		}
-
+		
 		private void ServicesProviderOnServiceRequestFailure(object sender, ServiceRequestFailureEventArgs e)
 		{
 			_control.UnsetWaiting();
 		}
-
-		private async void OnAttachToReplica(object sender, AttachToReplicaEventArgs e)
+		
+		private async void OnAttachToReplica(object sender, ReplicaEventArgs e)
 		{
 			if (e.Replica.Pid == null)
 				return;
 
 			await TyeExplorerServices.Get<DebuggerAttacher>().Attach(e.Replica);
 		}
+		
+		private async void OnAttachToService(object sender, ServiceEventArgs e)
+		{
+			await TyeExplorerServices.Get<DebuggerAttacher>().Attach(e.Service.Replicas.Values);
+		}
+		
+		private async void OnShowServiceLogs(object sender, ServiceEventArgs e)
+		{
+			await TyeExplorerServices.Get<TyeServiceOutputManager>().Attach(e.Service);
+		}
 
-		private void OnSelectedItemChanged(object sender, SelectedItemChangedEventArgs e)
+		private void OnSelectedItemChanged(object sender, ItemEventArgs e)
 		{
 			TyeExplorerServices.Get<TyeServicesProvider>().SelectedService = e.Item;
 		}

@@ -12,10 +12,12 @@ namespace TyeExplorer.Services
 	public class DebuggerAttacher
 	{
 		private readonly AsyncPackage _package;
+		private readonly TyeExplorerLogger _logger;
 
-		public DebuggerAttacher(AsyncPackage package)
+		public DebuggerAttacher(AsyncPackage package, TyeExplorerLogger logger)
 		{
 			_package = package;
+			_logger = logger;
 		}
 
 		public Task Attach(params V1ReplicaStatus[] replicas)
@@ -26,7 +28,12 @@ namespace TyeExplorer.Services
 		public async Task Attach(IEnumerable<V1ReplicaStatus> replicas)
 		{
 			var replicaList = replicas.ToList();
-			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+
+			_logger.Log($"Attaching to {replicaList.Count} replicas");
+			foreach (var replica in replicaList)
+			{
+				_logger.Log($"Attaching {replica.Name} (PID: {replica.Pid}, State: {replica.State})");
+			}
 			
 			var dte = (DTE) await _package.GetServiceAsync(typeof(DTE));
 			
@@ -34,23 +41,24 @@ namespace TyeExplorer.Services
 
 			try
 			{
+				var attachedReplicas = new List<V1ReplicaStatus>();
 				foreach (var localProcess in
 					dte.Debugger.LocalProcesses.Cast<Process>()
 						.Where(localProcess => replicaList.Any(r => r.Pid == localProcess.ProcessID)))
 				{
+					attachedReplicas.Add(replicaList.FirstOrDefault(r => r.Pid == localProcess.ProcessID));
 					localProcess.Attach();
+				}
+
+				var unattachedReplicas = replicaList.Except(attachedReplicas).ToList();
+				if (unattachedReplicas.Any())
+				{
+					_logger.Log($"Did not attach to replicas {string.Join(", ", unattachedReplicas.Select(r => r.Name))}.");
 				}
 			}
 			catch (Exception ex)
 			{
-				// Show a message box to prove we were here  
-				VsShellUtilities.ShowMessageBox(  
-					_package,  
-					$"Failed to attach debugger to process.{Environment.NewLine}{Environment.NewLine}{ex}",  
-					"Tye Explorer",  
-					OLEMSGICON.OLEMSGICON_CRITICAL,  
-					OLEMSGBUTTON.OLEMSGBUTTON_OK,  
-					OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);  
+				_logger.Log($"Failed to attach debugger to process. {ex}");
 			}
 		}
 	}

@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
+using TyeExplorer.Services;
 using Task = System.Threading.Tasks.Task;
 
 namespace TyeExplorer
@@ -47,6 +48,7 @@ namespace TyeExplorer
 		{
 			var services = new TyeExplorerServices(this);
 			await services.GetService<TyeCommandManager>().Initialize(this, cancellationToken);
+			await services.GetService<TyeExplorerLogger>().Initialize();
 		}
 
 		#endregion

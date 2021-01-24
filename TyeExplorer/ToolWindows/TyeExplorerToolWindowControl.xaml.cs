@@ -15,9 +15,10 @@ namespace TyeExplorer.ToolWindows
 			this.InitializeComponent();
 		}
 
-		public event EventHandler<AttachToReplicaEventArgs> AttachToReplica;
-		public event EventHandler<AttachToServiceEventArgs> AttachToService;
-		public event EventHandler<SelectedItemChangedEventArgs> SelectedItemChanged;
+		public event EventHandler<ReplicaEventArgs> AttachToReplica;
+		public event EventHandler<ServiceEventArgs> AttachToService;
+		public event EventHandler<ItemEventArgs> SelectedItemChanged;
+		public event EventHandler<ServiceEventArgs> ShowServiceLogs;
 		
 		public void SetWaiting()
 		{
@@ -112,22 +113,25 @@ namespace TyeExplorer.ToolWindows
 			switch (treeViewItem?.Tag)
 			{
 				case V1Service service:
-					isChecked = !tyeServicesProvider.IsAttachToAllService(service);
-					isAttachable = tyeServicesProvider.IsAttachableService(service);
+					isChecked = !tyeServicesProvider.IsAttachToAllAvailable(service);
+					isAttachable = tyeServicesProvider.IsAttachable(service);
 					break;
 				case ReplicaContainer replica:
-					isChecked = !tyeServicesProvider.IsAttachToAllReplica(replica.Replica);
-					isAttachable = tyeServicesProvider.IsAttachableService(replica.Service);
+					isChecked = !tyeServicesProvider.IsAttachToAllAvailable(replica.Replica);
+					isAttachable = tyeServicesProvider.IsAttachable(replica.Service);
 					break;
 			}
 
 			var contextMenu = FindResource<ContextMenu>(isAttachable ? "ContextMenuService" : "ContextMenuUnavailable");
 			contextMenu.PlacementTarget = sender as TreeViewItem;
 			contextMenu.IsOpen = true;
-			
-			
-			var menuItemToggleAttach = (MenuItem)contextMenu.Items[1]; //TODO: why does this not work: contextMenu.FindName("MenuItemToggleAttach") as MenuItem;
-			menuItemToggleAttach.IsChecked = isChecked;
+
+			if (isAttachable)
+			{
+				var menuItemToggleAttach =
+					(MenuItem) contextMenu.Items[1]; //TODO: why does this not work: contextMenu.FindName("MenuItemToggleAttach") as MenuItem;
+				menuItemToggleAttach.IsChecked = isChecked;
+			}
 		}
 		
 		private void MenuItemOnClickAttachDebugger(object sender, RoutedEventArgs e)
@@ -139,13 +143,13 @@ namespace TyeExplorer.ToolWindows
 			switch (treeViewItem?.Tag)
 			{
 				case ReplicaContainer replica:
-					OnAttachToReplica(new AttachToReplicaEventArgs
+					OnAttachToReplica(new ReplicaEventArgs
 					{
 						Replica = replica.Replica
 					});
 					break;
 				case V1Service service:
-					OnAttachToService(new AttachToServiceEventArgs
+					OnAttachToService(new ServiceEventArgs
 					{
 						Service = service
 					});
@@ -172,33 +176,53 @@ namespace TyeExplorer.ToolWindows
 					break;
 			}
 		}
+		
+		private void MenuItemOnClickServiceLogs(object sender, RoutedEventArgs e)
+		{
+			
+			var menuItem = sender as MenuItem;
+			var contextMenu = menuItem?.Parent as ContextMenu;
+			var treeViewItem = contextMenu?.PlacementTarget as TreeViewItem;
+			
+			switch (treeViewItem?.Tag)
+			{
+				case V1Service service:
+					OnShowServiceLogs(new ServiceEventArgs {Service = service});
+					break;
+				case ReplicaContainer replica:
+					OnShowServiceLogs(new ServiceEventArgs {Service = replica.Service});
+					break;
+			}
+		}
 
 		private void TreeViewOnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 		{
 			var item = e.NewValue as TreeViewItem;
 			var value = item?.Tag;
 
-			if (value is ReplicaContainer replica)
-			{
-				value = replica.Replica;
-			}
+			if (value is ReplicaContainer replica) value = replica.Replica;
 
-			OnSelectedItemChanged(new SelectedItemChangedEventArgs {Item = value});
+			OnSelectedItemChanged(new ItemEventArgs {Item = value});
 		}
 		
-		protected virtual void OnAttachToReplica(AttachToReplicaEventArgs e)
+		protected virtual void OnAttachToReplica(ReplicaEventArgs e)
 		{
 			AttachToReplica?.Invoke(this, e);
 		}
 		
-		protected virtual void OnAttachToService(AttachToServiceEventArgs e)
+		protected virtual void OnAttachToService(ServiceEventArgs e)
 		{
 			AttachToService?.Invoke(this, e);
 		}
 
-		protected virtual void OnSelectedItemChanged(SelectedItemChangedEventArgs e)
+		protected virtual void OnSelectedItemChanged(ItemEventArgs e)
 		{
 			SelectedItemChanged?.Invoke(this, e);
+		}
+		
+		protected virtual void OnShowServiceLogs(ServiceEventArgs e)
+		{
+			ShowServiceLogs?.Invoke(this, e);
 		}
 		
 		private class ReplicaContainer

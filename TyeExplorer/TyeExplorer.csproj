@@ -48,7 +48,7 @@
     <Compile Include="Commands\AttachToSelectedCommand.cs" />
     <Compile Include="Commands\AttachToStartupProjectsCommand.cs" />
     <Compile Include="Services\DebuggerAttacher.cs" />
-    <Compile Include="Services\RunAllAvailabilityChangedEventArgs.cs" />
+    <Compile Include="Services\AvailabilityChangedEventArgs.cs" />
     <Compile Include="Services\ServiceRequestFailureEventArgs.cs" />
     <Compile Include="Services\TyeCommandManager.cs" />
     <Compile Include="Commands\AttachToAllCommand.cs" />
@@ -56,8 +56,12 @@
     <Compile Include="Commands\ReloadTyeExplorerCommand.cs" />
     <Compile Include="Commands\TyeCommand.cs" />
     <Compile Include="Services\SessionConfiguration.cs" />
+    <Compile Include="Services\TyeExplorerLogger.cs" />
+    <Compile Include="Services\TyeServiceOutputConnector.cs" />
+    <Compile Include="Services\TyeServiceOutputManager.cs" />
     <Compile Include="Services\TyeServicesProvider.cs" />
-    <Compile Include="ToolWindows\AttachToServiceEventArgs.cs" />
+    <Compile Include="ToolWindows\ItemEventArgs.cs" />
+    <Compile Include="ToolWindows\ServiceEventArgs.cs" />
     <Compile Include="Services\TyeExplorerServices.cs" />
     <Compile Include="Tye\Models\ReplicaState.cs" />
     <Compile Include="Tye\Models\ServiceType.cs" />
@@ -71,7 +75,7 @@
     <Compile Include="Tye\Models\V1ServiceDescription.cs" />
     <Compile Include="Tye\Models\V1ServiceStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToolWindows\AttachToReplicaEventArgs.cs" />
+    <Compile Include="ToolWindows\ReplicaEventArgs.cs" />
     <Compile Include="ToolWindows\TyeExplorerToolWindow.cs" />
     <Compile Include="Commands\TyeExplorerToolWindowCommand.cs" />
     <Compile Include="ToolWindows\TyeExplorerToolWindowControl.xaml.cs">

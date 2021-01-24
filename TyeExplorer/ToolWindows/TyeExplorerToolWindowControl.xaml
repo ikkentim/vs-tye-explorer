@@ -13,6 +13,7 @@
         <ContextMenu x:Key="ContextMenuService">
             <MenuItem Header="Attach debugger" Click="MenuItemOnClickAttachDebugger" />
             <MenuItem Name="MenuItemToggleAttach" Header="Exclude from &quot;Attach to all&quot;" Click="MenuItemOnClickToggleAttach" />
+            <MenuItem Header="Show service logs" Click="MenuItemOnClickServiceLogs"></MenuItem>
         </ContextMenu>
         <ContextMenu x:Key="ContextMenuUnavailable">
             <MenuItem IsEnabled="False" Header="Service cannot be attached to" />

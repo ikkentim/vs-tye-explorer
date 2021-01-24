@@ -13,5 +13,8 @@
 		public const int ReloadTyeExplorerCommandId = 256;
 		public const int AttachToSelectedCommandId = 5;
 		public const int AttachToStartupProjectsCommandId = 6;
+		public const int OpenSelectedServiceLoggingCommandId = 7;
+
+		public const string TyeExplorerLogWindow = "f59325cd-5dbb-4d28-82ac-f5fa48390bdb";
 	}
 }

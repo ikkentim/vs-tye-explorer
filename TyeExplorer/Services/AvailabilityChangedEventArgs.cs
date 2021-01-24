@@ -3,7 +3,7 @@ using TyeExplorer.Tye.Models;
 
 namespace TyeExplorer.Services
 {
-	public class RunAllAvailabilityChangedEventArgs : EventArgs
+	public class AvailabilityChangedEventArgs : EventArgs
 	{
 		public bool IsAvailable { get; set; }
 	}
