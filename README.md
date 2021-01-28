@@ -21,3 +21,5 @@ Install the extension through from the marketplace or directly from the extensio
 ## How to use
 - Run tye from your favorite command prompt
 - Open the explorer through `View -> Other Windows -> Tye Explorer`
+
+![](resources/screenshot-1.png)
