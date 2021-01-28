@@ -2,9 +2,8 @@
 
 namespace TyeExplorer.Services
 {
-	public class ServiceRequestFailureEventArgs : EventArgs
+	public class ServiceRequestStartedEventArgs : EventArgs
 	{
 		public bool IsBackground { get; set; }
-		public string Reason { get; set; }
 	}
 }

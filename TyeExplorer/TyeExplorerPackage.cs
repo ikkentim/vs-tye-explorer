@@ -48,8 +48,10 @@ namespace TyeExplorer
 		protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
 		{
 			var services = new TyeExplorerServices(this);
+			
 			await services.GetService<TyeCommandManager>().Initialize(this, cancellationToken);
 			await services.GetService<TyeExplorerLogger>().Initialize();
+			services.GetService<TyeServicesProvider>().EnableBackgroundRefresh();
 		}
 
 		#endregion

@@ -13,7 +13,7 @@ namespace TyeExplorer.Services
 		private readonly AsyncPackage _package;
 		private readonly TyeServicesProvider _servicesProvider;
 
-		private readonly Dictionary<string, TyeServiceOutputConnector> _output = new Dictionary<string, TyeServiceOutputConnector>();
+		private readonly Dictionary<string, TyeServiceOutputAdapter> _output = new Dictionary<string, TyeServiceOutputAdapter>();
 
 		public TyeServiceOutputManager(AsyncPackage package, TyeServicesProvider servicesProvider)
 		{
@@ -34,7 +34,6 @@ namespace TyeExplorer.Services
 
 		public async Task Attach(V1Service service)
 		{
-			
 			var outWindow = (IVsOutputWindow) await _package.GetServiceAsync(typeof(SVsOutputWindow));
 
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
@@ -53,7 +52,7 @@ namespace TyeExplorer.Services
 
 			outWindow.GetPane(ref paneId, out var customPane);
 			
-			connector = new TyeServiceOutputConnector(customPane, service, paneId, _package.DisposalToken);
+			connector = new TyeServiceOutputAdapter(customPane, service, paneId, _package.DisposalToken);
 			connector.Start();
 			customPane.Activate();
 			

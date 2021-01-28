@@ -50,6 +50,7 @@
     <Compile Include="Services\DebuggerAttacher.cs" />
     <Compile Include="Services\AvailabilityChangedEventArgs.cs" />
     <Compile Include="Services\ServiceRequestFailureEventArgs.cs" />
+    <Compile Include="Services\ServiceRequestStartedEventArgs.cs" />
     <Compile Include="Services\TyeCommandManager.cs" />
     <Compile Include="Commands\AttachToAllCommand.cs" />
     <Compile Include="Commands\OpenTyeDashboardCommand.cs" />
@@ -57,7 +58,7 @@
     <Compile Include="Commands\TyeCommand.cs" />
     <Compile Include="Services\SessionConfiguration.cs" />
     <Compile Include="Services\TyeExplorerLogger.cs" />
-    <Compile Include="Services\TyeServiceOutputConnector.cs" />
+    <Compile Include="Services\TyeServiceOutputAdapter.cs" />
     <Compile Include="Services\TyeServiceOutputManager.cs" />
     <Compile Include="Services\TyeServicesProvider.cs" />
     <Compile Include="ToolWindows\ItemEventArgs.cs" />
@@ -129,7 +130,7 @@
     </Content>
     <VSCTCompile Include="TyeExplorerPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
-	  <SubType>Debug</SubType>
+      <SubType>Debug</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup />

@@ -10,17 +10,23 @@ using TyeExplorer.Tye.Models;
 
 namespace TyeExplorer.Services
 {
-	public class TyeServiceOutputConnector
+	public class TyeServiceOutputAdapter
 	{
+		private static readonly TimeSpan LogPollingTimeout = TimeSpan.FromSeconds(1);
+		private static readonly TimeSpan LogPollingInterval = TimeSpan.FromSeconds(2);
+
 		private readonly CancellationToken _cancellationToken;
 		private readonly HttpClient _client;
 		private readonly IVsOutputWindowPane _pane;
 		private readonly JsonSerializer _serializer;
 
 		private CancellationTokenSource _cancellationTokenSource;
+
+		private string _firstLine;
+		private int _lineCount;
 		private V1Service _service;
 
-		public TyeServiceOutputConnector(IVsOutputWindowPane pane, V1Service service, Guid paneId, CancellationToken cancellationToken)
+		public TyeServiceOutputAdapter(IVsOutputWindowPane pane, V1Service service, Guid paneId, CancellationToken cancellationToken)
 		{
 			PaneId = paneId;
 			_pane = pane;
@@ -29,14 +35,14 @@ namespace TyeExplorer.Services
 			ServiceName = service.Description.Name;
 			_client = new HttpClient
 			{
-				BaseAddress = new Uri($"{TyeServicesProvider.DashboardUrl}/api/v1/"),
-				Timeout = TimeSpan.FromSeconds(1)
+				BaseAddress = TyeServicesProvider.ApiUri,
+				Timeout = LogPollingTimeout
 			};
 			_serializer = JsonSerializer.CreateDefault();
 		}
-		
+
 		public Guid PaneId { get; }
-		
+
 		public V1Service Service
 		{
 			get => _service;
@@ -78,9 +84,6 @@ namespace TyeExplorer.Services
 			}
 		}
 
-		private string _firstLine;
-		private int _lineCount;
-		
 		private async void StartPoller()
 		{
 			if (_cancellationTokenSource != null)
@@ -116,10 +119,10 @@ namespace TyeExplorer.Services
 					}
 
 					_lineCount = lines.Length;
-					
+
 					token.ThrowIfCancellationRequested();
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					Log($"Polling failed: {e.Message}");
 					_cancellationTokenSource = null;
@@ -128,10 +131,12 @@ namespace TyeExplorer.Services
 
 				try
 				{
-					await Task.Delay(TimeSpan.FromSeconds(2), token);
+					await Task.Delay(LogPollingInterval, token);
 				}
 				catch (TaskCanceledException)
 				{
+					_cancellationTokenSource = null;
+					return;
 				}
 			}
 		}
@@ -160,7 +165,7 @@ namespace TyeExplorer.Services
 				return;
 
 			IsRunning = true;
-			
+
 			StartPoller();
 		}
 
@@ -170,7 +175,7 @@ namespace TyeExplorer.Services
 				return;
 
 			IsRunning = true;
-			
+
 			StartPoller();
 		}
 

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Threading;
 using TyeExplorer.Services;
 using TyeExplorer.ToolWindows;
+using Task = System.Threading.Tasks.Task;
 
 namespace TyeExplorer
 {
@@ -43,11 +46,28 @@ namespace TyeExplorer
 			servicesProvider.ServicesRequestStarted += OnServicesRequestStarted;
 			servicesProvider.ServicesReceived += OnServicesReceived;
 			servicesProvider.ServiceRequestFailure += ServicesProviderOnServiceRequestFailure;
+
+			var services = servicesProvider.Services;
+			if (services != null)
+				_control.SetServices(services.ToArray());
 		}
 		
 		private void ServicesProviderOnServiceRequestFailure(object sender, ServiceRequestFailureEventArgs e)
 		{
 			_control.UnsetWaiting();
+		}
+
+		private void OnServicesReceived(object sender, ServicesReceivedEventArgs e)
+		{
+			_control.UnsetWaiting();
+			
+			if (e.Services != null)
+				_control.SetServices(e.Services);
+		}
+
+		private void OnServicesRequestStarted(object sender, EventArgs e)
+		{
+			_control.SetWaiting();
 		}
 		
 		private async void OnAttachToReplica(object sender, ReplicaEventArgs e)
@@ -71,19 +91,6 @@ namespace TyeExplorer
 		private void OnSelectedItemChanged(object sender, ItemEventArgs e)
 		{
 			TyeExplorerServices.Get<TyeServicesProvider>().SelectedService = e.Item;
-		}
-
-		private void OnServicesReceived(object sender, ServicesReceivedEventArgs e)
-		{
-			_control.UnsetWaiting();
-			
-			if (e.Services != null)
-				_control.SetServices(e.Services);
-		}
-
-		private void OnServicesRequestStarted(object sender, EventArgs e)
-		{
-			_control.SetWaiting();
 		}
 	}
 }
