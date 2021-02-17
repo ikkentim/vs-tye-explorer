@@ -26,16 +26,11 @@ namespace TyeExplorer
 	/// </para>
 	/// </remarks>
 	[PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-	[Guid(PackageGuidString)]
+	[Guid(PackageGuids.guidTyeExplorerPackageString)]
 	[ProvideMenuResource("Menus.ctmenu", 2)]
 	[ProvideToolWindow(typeof(TyeExplorerToolWindow))]
 	public sealed class TyeExplorerPackage : AsyncPackage
 	{
-		/// <summary>
-		/// TyeExplorerPackage GUID string.
-		/// </summary>
-		public const string PackageGuidString = "1e58a7e2-226e-4353-95ec-8d4e88408a19";
-		
 		#region Package Members
 
 		/// <summary>

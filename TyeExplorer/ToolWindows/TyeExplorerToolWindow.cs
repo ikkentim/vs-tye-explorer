@@ -34,14 +34,13 @@ namespace TyeExplorer
 			// we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
 			// the object returned by the Content property.
 			Content = _control = new TyeExplorerToolWindowControl();
-			ToolBar = new CommandID(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus), TyeExplorerGuids.Toolbar);
+			ToolBar = new CommandID(PackageGuids.guidTyeExplorerCommandsAndMenus, PackageIds.TyeExplorer_Toolbar);
 			
 			_control.AttachToReplica += OnAttachToReplica;
 			_control.AttachToService += OnAttachToService;
 			_control.SelectedItemChanged += OnSelectedItemChanged;
 			_control.ShowServiceLogs += OnShowServiceLogs;
 			
-			// TODO: Remove handler at some point? When?
 			var servicesProvider = TyeExplorerServices.Get<TyeServicesProvider>();
 			servicesProvider.ServicesRequestStarted += OnServicesRequestStarted;
 			servicesProvider.ServicesReceived += OnServicesReceived;

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Commands\AttachToSelectedCommand.cs" />
     <Compile Include="Commands\AttachToStartupProjectsCommand.cs" />
+    <Compile Include="Commands\OpenSelectedServiceLoggingCommand.cs" />
     <Compile Include="Services\DebuggerAttacher.cs" />
     <Compile Include="Services\AvailabilityChangedEventArgs.cs" />
     <Compile Include="Services\ServiceRequestFailureEventArgs.cs" />
@@ -64,6 +65,11 @@
     <Compile Include="ToolWindows\ItemEventArgs.cs" />
     <Compile Include="ToolWindows\ServiceEventArgs.cs" />
     <Compile Include="Services\TyeExplorerServices.cs" />
+    <Compile Include="TyeExplorerPackage1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TyeExplorerPackage.vsct</DependentUpon>
+    </Compile>
     <Compile Include="Tye\Models\ReplicaState.cs" />
     <Compile Include="Tye\Models\ServiceType.cs" />
     <Compile Include="Tye\Models\V1ConfigurationSource.cs" />
@@ -83,7 +89,6 @@
       <DependentUpon>TyeExplorerToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ServicesReceivedEventArgs.cs" />
-    <Compile Include="TyeExplorerGuids.cs" />
     <Compile Include="TyeExplorerPackage.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +136,8 @@
     <VSCTCompile Include="TyeExplorerPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Debug</SubType>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>TyeExplorerPackage1.cs</LastGenOutput>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup />

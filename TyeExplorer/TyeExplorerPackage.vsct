@@ -159,6 +159,7 @@
       <IDSymbol value="6" name="bmpPicStrikethrough" />
     </GuidSymbol>
   
+    <GuidSymbol value="{f59325cd-5dbb-4d28-82ac-f5fa48390bdb}" name="guidTyeExplorerLogWindow"/>
   </Symbols>
   
   <KeyBindings>

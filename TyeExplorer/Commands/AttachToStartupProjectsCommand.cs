@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.TextManager.Interop;
 using TyeExplorer.Services;
 using TyeExplorer.Tye.Models;
 using Task = System.Threading.Tasks.Task;
@@ -18,8 +17,7 @@ namespace TyeExplorer.Commands
 		private readonly TyeExplorerLogger _logger;
 
 		public AttachToStartupProjectsCommand(TyeServicesProvider tyeServicesProvider, DebuggerAttacher debuggerAttacher, TyeExplorerLogger _logger) :
-			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.AttachStartupProjects)
+			base(PackageIds.TyeExplorer_AttachStartupProjects)
 		{
 			_tyeServicesProvider = tyeServicesProvider;
 			_debuggerAttacher = debuggerAttacher;

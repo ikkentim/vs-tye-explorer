@@ -21,10 +21,9 @@ namespace TyeExplorer.Services
 			var outWindow = (IVsOutputWindow) await _package.GetServiceAsync(typeof(SVsOutputWindow));
 
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
-
-			var id = new Guid(TyeExplorerGuids.GuidTyeExplorerLogWindow);
-			outWindow.CreatePane(ref id, "Tye Explorer", 1, 0);
-			outWindow.GetPane(ref id, out _pane);
+			
+			outWindow.CreatePane(ref PackageGuids.guidTyeExplorerLogWindow, "Tye Explorer", 1, 0);
+			outWindow.GetPane(ref PackageGuids.guidTyeExplorerLogWindow, out _pane);
 		}
 
 		public void Log(string message)

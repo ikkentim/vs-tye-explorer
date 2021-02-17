@@ -2,15 +2,13 @@
 using System;
 using System.Diagnostics;
 using TyeExplorer.Services;
-using TyeExplorer.Tye;
 
 namespace TyeExplorer.Commands
 {
 	internal sealed class OpenTyeDashboardCommand :TyeCommand
 	{
 		public OpenTyeDashboardCommand() : 
-			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.OpenDashboard)
+			base(PackageIds.TyeExplorer_OpenDashboard)
 		{
 		}
 		

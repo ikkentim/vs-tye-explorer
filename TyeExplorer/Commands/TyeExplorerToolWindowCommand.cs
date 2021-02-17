@@ -6,8 +6,7 @@ namespace TyeExplorer.Commands
 	internal sealed class TyeExplorerToolWindowCommand : TyeCommand
 	{
 		public TyeExplorerToolWindowCommand()
-			: base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.OpenWindow)
+			: base(PackageIds.TyeExplorer_OpenWindow)
 		{
 		}
 

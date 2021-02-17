@@ -10,6 +10,10 @@ namespace TyeExplorer.Commands
 		private readonly Guid _commandSet;
 		private readonly int _commandId;
 
+		protected TyeCommand(int commandId) : this(PackageGuids.guidTyeExplorerCommandsAndMenus, commandId)
+		{
+		}
+
 		protected TyeCommand(Guid commandSet, int commandId)
 		{
 			_commandSet = commandSet;

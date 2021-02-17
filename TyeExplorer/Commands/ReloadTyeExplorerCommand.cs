@@ -1,6 +1,5 @@
 ﻿using System;
 using TyeExplorer.Services;
-using TyeExplorer.Tye;
 using Task = System.Threading.Tasks.Task;
 
 namespace TyeExplorer.Commands
@@ -10,8 +9,7 @@ namespace TyeExplorer.Commands
 		private readonly TyeServicesProvider _apiConnector;
 
 		public ReloadTyeExplorerCommand(TyeServicesProvider apiConnector) :
-			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.ReloadServices)
+			base(PackageIds.TyeExplorer_ReloadServices)
 		{
 			_apiConnector = apiConnector;
 		}

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.Shell;
 using TyeExplorer.Services;
-using TyeExplorer.Tye;
 using Task = System.Threading.Tasks.Task;
 
 namespace TyeExplorer.Commands
@@ -13,8 +10,7 @@ namespace TyeExplorer.Commands
 		private readonly DebuggerAttacher _debuggerAttacher;
 
 		public AttachToAllCommand(TyeServicesProvider tyeServicesProvider, DebuggerAttacher debuggerAttacher) :
-			base(new Guid(TyeExplorerGuids.GuidTyeExplorerCommandsAndMenus),
-				TyeExplorerGuids.AttachAll)
+			base(PackageIds.TyeExplorer_AttachAll)
 		{
 			_tyeServicesProvider = tyeServicesProvider;
 			_debuggerAttacher = debuggerAttacher;
