@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using TyeExplorer.Tye.Models;
@@ -35,9 +36,9 @@ namespace TyeExplorer.Services
 				_logger.Log($"Attaching {replica.Name} (PID: {replica.Pid}, State: {replica.State})");
 			}
 			
-			var dte = (DTE) await _package.GetServiceAsync(typeof(DTE));
-			
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+
+			var dte = await _package.GetServiceAsync(typeof(SDTE)) as DTE2;
 
 			try
 			{
