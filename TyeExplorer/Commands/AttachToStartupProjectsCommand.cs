@@ -42,9 +42,12 @@ namespace TyeExplorer.Commands
 
 			foreach (string projectPath in startupProjects)
 			{
-				var projectName = Path.GetFileNameWithoutExtension(projectPath);
-				var service = _tyeServicesProvider.Services.FirstOrDefault(s =>
-					string.Equals(s.Description.Name, projectName, StringComparison.InvariantCultureIgnoreCase));
+				// Combine the relative project path and the root of the solution to derive the full path of the project
+				var normalizedProjectPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(dte.Solution.FileName), projectPath));
+
+				var service = _tyeServicesProvider.Services
+					.Where(s => s.Description.RunInfo.Project != null)
+					.FirstOrDefault(s => string.Equals(Path.GetFullPath(s.Description.RunInfo.Project), normalizedProjectPath, StringComparison.InvariantCultureIgnoreCase));
 
 				if (service != null && _tyeServicesProvider.IsAttachable(service))
 					replicas.AddRange(service.Replicas.Values);
