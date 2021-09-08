@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using TyeExplorer.Services;
 using TyeExplorer.Tye.Models;
 using Task = System.Threading.Tasks.Task;
@@ -27,9 +29,9 @@ namespace TyeExplorer.Commands
 		protected override async Task ExecuteAsync(object sender, EventArgs e)
 		{
 			await _tyeServicesProvider.Refresh();
-			
-			var dte = (DTE)await Package.GetServiceAsync(typeof(DTE));
+
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(Package.DisposalToken);
+			var dte = await Package.GetServiceAsync(typeof(SDTE)) as DTE2;
 
 			var replicas = new List<V1ReplicaStatus>();
 				
