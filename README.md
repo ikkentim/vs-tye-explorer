@@ -15,7 +15,7 @@ Feel free to open an issue for bug reports or feature requests!
   - the startup projects of the loaded solution
  
 ## Installing
-The extension can be found on the Visual Studio Marketplace https://marketplace.visualstudio.com/items?itemName=ikkentim.TimsTyeExplorer .
+The extension can be found on the Visual Studio Marketplace https://marketplace.visualstudio.com/items?itemName=ikkentim.TimsTyeExplorer22 .
 Install the extension through from the marketplace or directly from the extensions manager in Visual Studio.
 
 ## How to use
