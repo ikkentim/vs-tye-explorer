@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
 using TyeExplorer.Commands;
-using Task = System.Threading.Tasks.Task;
 
 namespace TyeExplorer
 {
@@ -25,7 +24,7 @@ namespace TyeExplorer
 				: default;
 		}
 
-		public async Task Initialize(AsyncPackage package, CancellationToken cancellationToken)
+		public void Initialize(AsyncPackage package)
 		{
 			// Initialize all commands which implement TyeCommand in this assembly
 			foreach (var type in GetType()
@@ -33,8 +32,6 @@ namespace TyeExplorer
 				.GetTypes()
 				.Where(t => t != typeof(TyeCommand) && typeof(TyeCommand).IsAssignableFrom(t)))
 			{
-				await package.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-				
 				var args = type.GetConstructors()
 					.First()
 					.GetParameters()
@@ -43,7 +40,7 @@ namespace TyeExplorer
 				
 				var command = (TyeCommand) Activator.CreateInstance(type, args);
 				
-				await command.Initialize(package);
+				command.Initialize(package);
 				
 				_commands[type] = command;
 			}

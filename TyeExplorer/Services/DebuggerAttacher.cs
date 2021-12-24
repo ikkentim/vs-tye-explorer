@@ -21,13 +21,17 @@ namespace TyeExplorer.Services
 			_logger = logger;
 		}
 
-		public Task Attach(params V1ReplicaStatus[] replicas)
+		public void Attach(params V1ReplicaStatus[] replicas)
 		{
-			return Attach((IEnumerable<V1ReplicaStatus>) replicas);
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+			Attach((IEnumerable<V1ReplicaStatus>) replicas);
 		}
 		
-		public async Task Attach(IEnumerable<V1ReplicaStatus> replicas)
+		public void Attach(IEnumerable<V1ReplicaStatus> replicas)
 		{
+            ThreadHelper.ThrowIfNotOnUIThread();
+
 			var replicaList = replicas.ToList();
 
 			_logger.Log($"Attaching to {replicaList.Count} replicas");
@@ -35,23 +39,27 @@ namespace TyeExplorer.Services
 			{
 				_logger.Log($"Attaching {replica.Name} (PID: {replica.Pid}, State: {replica.State})");
 			}
-			
-			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
 
-			var dte = await _package.GetServiceAsync(typeof(SDTE)) as DTE2;
+            var dte = _package.GetService<SDTE, DTE2>();
 
 			try
 			{
 				var attachedReplicas = new List<V1ReplicaStatus>();
-				foreach (var localProcess in
-					dte.Debugger.LocalProcesses.Cast<Process>()
-						.Where(localProcess => replicaList.Any(r => r.Pid == localProcess.ProcessID)))
-				{
-					attachedReplicas.Add(replicaList.FirstOrDefault(r => r.Pid == localProcess.ProcessID));
-					localProcess.Attach();
-				}
+                foreach (var localProcess in dte.Debugger.LocalProcesses.Cast<Process>())
+                {
+                    var pid = localProcess.ProcessID;
+                    var replica = replicaList.FirstOrDefault(r => r.Pid == pid);
 
-				var unattachedReplicas = replicaList.Except(attachedReplicas).ToList();
+                    if (replica == null)
+                    {
+                        continue;
+                    }
+
+                    attachedReplicas.Add(replica);
+                    localProcess.Attach();
+                }
+
+                var unattachedReplicas = replicaList.Except(attachedReplicas).ToList();
 				if (unattachedReplicas.Any())
 				{
 					_logger.Log($"Did not attach to replicas {string.Join(", ", unattachedReplicas.Select(r => r.Name))}.");

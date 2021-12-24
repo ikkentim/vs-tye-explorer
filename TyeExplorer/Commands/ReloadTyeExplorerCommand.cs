@@ -16,7 +16,7 @@ namespace TyeExplorer.Commands
 
 		protected override async Task ExecuteAsync(object sender, EventArgs e)
 		{
-			await _apiConnector.Refresh();
+			await _apiConnector.RefreshAsync();
 		}
 	}
 }

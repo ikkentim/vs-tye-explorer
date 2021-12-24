@@ -28,24 +28,25 @@ namespace TyeExplorer.Commands
 
 		protected override async Task ExecuteAsync(object sender, EventArgs e)
 		{
-			await _tyeServicesProvider.Refresh();
+			await _tyeServicesProvider.RefreshAsync();
 
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(Package.DisposalToken);
-			var dte = await Package.GetServiceAsync(typeof(SDTE)) as DTE2;
 
-			var replicas = new List<V1ReplicaStatus>();
-				
+            var dte = Package.GetService<SDTE, DTE2>();
+			
 			var startupProjects = (Array) dte.Solution.SolutionBuild.StartupProjects;
-			if (startupProjects == null)
+            var solutionPath = Path.GetDirectoryName(dte.Solution.FileName);
+			if (startupProjects == null || solutionPath == null)
 			{
 				_logger.Log("No startup projects available.");
 				return;
 			}
-
+			
+            var replicas = new List<V1ReplicaStatus>();
 			foreach (string projectPath in startupProjects)
 			{
 				// Combine the relative project path and the root of the solution to derive the full path of the project
-				var normalizedProjectPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(dte.Solution.FileName), projectPath));
+				var normalizedProjectPath = Path.GetFullPath(Path.Combine(solutionPath, projectPath));
 
 				var service = _tyeServicesProvider.Services
 					.Where(s => s.Description.RunInfo.Project != null)
@@ -55,7 +56,7 @@ namespace TyeExplorer.Commands
 					replicas.AddRange(service.Replicas.Values);
 			}
 
-			await _debuggerAttacher.Attach(replicas);
+			_debuggerAttacher.Attach(replicas);
 		}
 	}
 }

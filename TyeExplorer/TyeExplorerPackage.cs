@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -42,12 +43,14 @@ namespace TyeExplorer
 		/// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
 		protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
 		{
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(DisposalToken);
+
 			var services = new TyeExplorerServices(this);
 			
-			await services.GetService<TyeCommandManager>().Initialize(this, cancellationToken);
-			await services.GetService<TyeExplorerLogger>().Initialize();
+			services.GetService<TyeCommandManager>().Initialize(this);
+			services.GetService<TyeExplorerLogger>().Initialize();
 			services.GetService<TyeServicesProvider>().EnableBackgroundRefresh();
-		}
+        }
 
 		#endregion
 	}

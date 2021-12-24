@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 using TyeExplorer.Services;
 using TyeExplorer.Tye.Models;
 
@@ -17,17 +18,19 @@ namespace TyeExplorer.Commands
 			_debuggerAttacher = debuggerAttacher;
 		}
 
-		protected override async Task ExecuteAsync(object sender, EventArgs e)
+		protected override void Execute(object sender, EventArgs e)
 		{
+            ThreadHelper.ThrowIfNotOnUIThread();
+
 			switch (_tyeServicesProvider.SelectedService)
 			{
 				case V1Service service:
 					if (_tyeServicesProvider.IsAttachable(service))
-						await _debuggerAttacher.Attach(service.Replicas.Values);
+						_debuggerAttacher.Attach(service.Replicas.Values);
 					break;
 				case V1ReplicaStatus replica:
 					if (_tyeServicesProvider.IsAttachable(replica))
-						await _debuggerAttacher.Attach(replica);
+						_debuggerAttacher.Attach(replica);
 					break;
 			}
 		}

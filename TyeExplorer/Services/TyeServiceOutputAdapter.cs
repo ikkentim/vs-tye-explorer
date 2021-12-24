@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json;
 using TyeExplorer.Tye.Models;
 
@@ -25,6 +27,7 @@ namespace TyeExplorer.Services
 		private string _firstLine;
 		private int _lineCount;
 		private V1Service _service;
+        private bool _isRunning;
 
 		public TyeServiceOutputAdapter(IVsOutputWindowPane pane, V1Service service, Guid paneId, CancellationToken cancellationToken)
 		{
@@ -54,9 +57,7 @@ namespace TyeExplorer.Services
 				OnServiceChanged(oldValue, value);
 			}
 		}
-
-		public bool IsRunning { get; private set; }
-
+		
 		public string ServiceName { get; }
 
 		private void Log(string message)
@@ -84,7 +85,7 @@ namespace TyeExplorer.Services
 
 		private async Task PollerRunnerAsync()
 		{
-			if (_cancellationTokenSource != null || IsRunning)
+			if (_cancellationTokenSource != null || _isRunning)
 				return;
 
 			_cancellationTokenSource = new CancellationTokenSource();
@@ -94,7 +95,7 @@ namespace TyeExplorer.Services
 			
             try
             {
-                IsRunning = true;
+                _isRunning = true;
 
                 while (!token.IsCancellationRequested)
                 {
@@ -103,7 +104,7 @@ namespace TyeExplorer.Services
                         var response = await _client.GetAsync($"logs/{ServiceName}", token);
                         response.EnsureSuccessStatusCode();
 
-                        var lines = await DeserializeResponse<string[]>(response);
+                        var lines = await DeserializeResponseAsync<string[]>(response);
 
                         if (lines.Length == 0 || lines[0] != _firstLine)
                         {
@@ -142,13 +143,13 @@ namespace TyeExplorer.Services
             }
             finally
             {
-                IsRunning = false;
+                _isRunning = false;
                 _cancellationTokenSource = null;
             }
         }
 
 
-		private async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
+		private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage response)
 		{
 			using (var stream = await response.Content.ReadAsStreamAsync())
 			{
@@ -167,10 +168,10 @@ namespace TyeExplorer.Services
 
 		public void Start()
 		{
-			if (Service == null || IsRunning)
+			if (Service == null || _isRunning)
 				return;
-			
-			_ = Task.Run(PollerRunnerAsync, _cancellationToken);
-		}
+
+            _ = ThreadHelper.JoinableTaskFactory.RunAsync(PollerRunnerAsync, JoinableTaskCreationOptions.LongRunning);
+        }
 	}
 }

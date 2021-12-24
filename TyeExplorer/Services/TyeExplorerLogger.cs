@@ -16,11 +16,11 @@ namespace TyeExplorer.Services
 			_package = package;
 		}
 
-		public async Task Initialize()
-		{
-			var outWindow = (IVsOutputWindow) await _package.GetServiceAsync(typeof(SVsOutputWindow));
+		public void Initialize()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+			var outWindow = _package.GetService<SVsOutputWindow, IVsOutputWindow>();
 			
 			outWindow.CreatePane(ref PackageGuids.guidTyeExplorerLogWindow, "Tye Explorer", 1, 0);
 			outWindow.GetPane(ref PackageGuids.guidTyeExplorerLogWindow, out _pane);

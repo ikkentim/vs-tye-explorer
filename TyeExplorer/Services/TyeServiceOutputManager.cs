@@ -32,12 +32,12 @@ namespace TyeExplorer.Services
 			}
 		}
 
-		public async Task Attach(V1Service service)
-		{
-			var outWindow = (IVsOutputWindow) await _package.GetServiceAsync(typeof(SVsOutputWindow));
+		public void Attach(V1Service service)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
-			
+            var outWindow = _package.GetService<SVsOutputWindow, IVsOutputWindow>();
+
 			if(_output.TryGetValue(service.Description.Name, out var connector))
 			{
 				// Ensure logging poller is running

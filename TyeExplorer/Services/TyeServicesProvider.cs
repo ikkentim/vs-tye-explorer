@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
@@ -25,9 +26,10 @@ namespace TyeExplorer.Services
 		private readonly AsyncPackage _package;
 		private readonly JsonSerializer _serializer;
 		private readonly SessionConfiguration _sessionConfiguration;
-		private bool _isBackgroundRefreshRunning;
 		private bool _runAllAvailable;
 		private V1Service[] _services;
+        private bool _isBackgroundRefreshRunning;
+        private bool _isRefreshRunning;
 
 		public TyeServicesProvider(SessionConfiguration sessionConfiguration, TyeExplorerLogger logger, AsyncPackage package)
 		{
@@ -55,7 +57,7 @@ namespace TyeExplorer.Services
 		public event EventHandler<ServiceRequestFailureEventArgs> ServiceRequestFailure;
 		public event EventHandler<AvailabilityChangedEventArgs> RunAllAvailabilityChanged;
 
-		private async Task CalcRunAllAvailable()
+		private async Task CalcRunAllAvailableAsync()
 		{
 			var newValue = _services?.Any(IsAttachToAllAvailable) ?? false;
 
@@ -63,7 +65,8 @@ namespace TyeExplorer.Services
 			{
 				_runAllAvailable = newValue;
 				
-				await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+				await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
 				OnRunAllAvailabilityChanged(new AvailabilityChangedEventArgs {IsAvailable = newValue});
 			}
 		}
@@ -106,117 +109,138 @@ namespace TyeExplorer.Services
 			_sessionConfiguration.SetAttachToAllEnabled(replica.Name, !value);
 		}
 
-		public async void EnableBackgroundRefresh()
+		public void EnableBackgroundRefresh()
 		{
-			await TaskScheduler.Default;
-			await Refresh();
-		}
-
-		public async Task Refresh()
-		{
-			// Spawn background refresh
-			if (!_isBackgroundRefreshRunning)
-				BackgroundRefresh();
-			
-			await InnerRefresh(false);
-		}
-
-		private async void BackgroundRefresh()
-		{
-			if (_isBackgroundRefreshRunning)
-				return;
-
-			lock (this)
-			{
-				if (_isBackgroundRefreshRunning)
-					return;
-
-				_isBackgroundRefreshRunning = true;
-			}
-
-			try
-			{
-				await TaskScheduler.Default;
-
-				var token = _package.DisposalToken;
-				while (!token.IsCancellationRequested)
-				{
-					try
-					{
-						await Task.Delay(BackgroundRefreshInterval, token);
-					}
-					catch (TaskCanceledException)
-					{
-						return;
-					}
-
-					if (!await InnerRefresh(true))
-						return;
-				}
-			}
-			finally
-			{
-				_isBackgroundRefreshRunning = false;
-			}
-		}
+            _ = ThreadHelper.JoinableTaskFactory.RunAsync(() => ServicePollerLoopAsync(true), JoinableTaskCreationOptions.LongRunning);
+        }
 		
-		private async Task<bool> InnerRefresh(bool isBackground)
+		public async Task RefreshAsync()
 		{
-			await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-			{
-				await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
-				OnServicesRequestStarted(new ServiceRequestStartedEventArgs
-				{
-					IsBackground = isBackground
-				});
-			});
+			// Restart background refreshing if it has stopped.
+			if (!_isBackgroundRefreshRunning)
+				_ = ThreadHelper.JoinableTaskFactory.RunAsync(() => ServicePollerLoopAsync(false), JoinableTaskCreationOptions.LongRunning);
 			
-			try
-			{
-				var sw = new Stopwatch();
-				sw.Start();
-				var response = await _client.GetAsync("services");
-				response.EnsureSuccessStatusCode();
-				sw.Stop();
-
-				var services = await DeserializeResponse<V1Service[]>(response);
-				
-				await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-				{
-					await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
-					OnServicesReceived(new ServicesReceivedEventArgs
-					{
-						Services = services
-					});
-				});
-				
-				_services = services ?? throw new Exception("Failed to deserialize services response from API.");
-
-				if (!isBackground)
-					_logger.Log($"Reloaded services, found {services.Length} services in {sw.Elapsed.TotalMilliseconds:0}ms.");
-
-				await CalcRunAllAvailable();
-				return true;
-			}
-			catch (Exception e)
-			{
-				_logger.Log($"Failed to reload services: {e.Message}");
-
-				await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-				{
-					await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
-					OnServiceRequestFailure(new ServiceRequestFailureEventArgs
-					{
-						Reason = e.Message,
-						IsBackground = isBackground
-					});
-				});
-				
-				return false;
-			}
+			await InnerRefreshAsync(false);
 		}
 
-		private async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
+        private readonly object _backgroundRefreshLock = new object();
+
+		private async Task ServicePollerLoopAsync(bool initialRefresh)
+		{
+            if (_isBackgroundRefreshRunning)
+                return;
+
+            lock (_backgroundRefreshLock)
+            {
+                if (_isBackgroundRefreshRunning)
+                    return;
+
+                _isBackgroundRefreshRunning = true;
+            }
+
+            try
+            {
+                await TaskScheduler.Default;
+
+                var token = _package.DisposalToken;
+                while (!token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        if (initialRefresh)
+                        {
+                            initialRefresh = false;
+                        }
+                        else
+                        {
+                            await Task.Delay(BackgroundRefreshInterval, token);
+                        }
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        return;
+                    }
+
+                    if (!await InnerRefreshAsync(true))
+                        return;
+                }
+            }
+            catch
+            {
+				// No exceptions should be caught here... but let's not throw any unhandled exceptions from this background task.
+            }
+            finally
+            {
+                _isBackgroundRefreshRunning = false;
+            }
+        }
+		
+		private async Task<bool> InnerRefreshAsync(bool isBackground)
+        {
+            if (_isRefreshRunning)
+                return true;
+
+            try
+            {
+                _isRefreshRunning = true;
+
+                await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+                    OnServicesRequestStarted(new ServiceRequestStartedEventArgs
+                    {
+                        IsBackground = isBackground
+                    });
+                });
+
+                var sw = new Stopwatch();
+                sw.Start();
+                var response = await _client.GetAsync("services");
+                response.EnsureSuccessStatusCode();
+                sw.Stop();
+
+                var services = await DeserializeResponseAsync<V1Service[]>(response);
+
+                await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+                    OnServicesReceived(new ServicesReceivedEventArgs
+                    {
+                        Services = services
+                    });
+                });
+
+                _services = services ?? throw new Exception("Failed to deserialize services response from API.");
+
+                if (!isBackground)
+                    _logger.Log($"Reloaded services, found {services.Length} services in {sw.Elapsed.TotalMilliseconds:0}ms.");
+
+                await CalcRunAllAvailableAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"Failed to reload services: {e.Message}");
+
+                await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+                    OnServiceRequestFailure(new ServiceRequestFailureEventArgs
+                    {
+                        Reason = e.Message,
+                        IsBackground = isBackground
+                    });
+                });
+
+                return false;
+            }
+            finally
+            {
+                _isRefreshRunning = false;
+            }
+        }
+
+		private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage response)
 		{
 			using (var stream = await response.Content.ReadAsStreamAsync())
 			{

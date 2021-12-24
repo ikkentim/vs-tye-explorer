@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.VisualStudio.Shell;
 using TyeExplorer.Services;
 using Task = System.Threading.Tasks.Task;
 
@@ -18,8 +19,10 @@ namespace TyeExplorer.Commands
 
 		protected override async Task ExecuteAsync(object sender, EventArgs e)
 		{
-			await _tyeServicesProvider.Refresh();
-			await _debuggerAttacher.Attach(_tyeServicesProvider.AllAttachableReplicas);
+			await _tyeServicesProvider.RefreshAsync();
+			
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(Package.DisposalToken);
+            _debuggerAttacher.Attach(_tyeServicesProvider.AllAttachableReplicas);
 		}
 	}
 }

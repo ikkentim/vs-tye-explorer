@@ -26,14 +26,12 @@ namespace TyeExplorer.Commands
 
 		protected MenuCommand MenuCommand { get; private set; }
 		
-		public virtual async Task Initialize(AsyncPackage package)
-		{
+		public virtual void Initialize(AsyncPackage package)
+        {
 			Package = package ?? throw new ArgumentNullException(nameof(package));
 
-			var commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var commandService = package.GetService<IMenuCommandService, OleMenuCommandService>();
 			
-			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
-
 			var menuCommandId = new CommandID(_commandSet, _commandId);
 			MenuCommand = new MenuCommand(Execute, menuCommandId);
 			
@@ -47,7 +45,7 @@ namespace TyeExplorer.Commands
 		
 		protected virtual void Execute(object sender, EventArgs e)
 		{
-			Package.JoinableTaskFactory.RunAsync(async delegate
+			_ = Package.JoinableTaskFactory.RunAsync(async delegate
 			{
 				await ExecuteAsync(sender, e);
 			});

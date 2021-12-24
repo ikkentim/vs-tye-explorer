@@ -69,22 +69,26 @@ namespace TyeExplorer
 			_control.SetWaiting();
 		}
 		
-		private async void OnAttachToReplica(object sender, ReplicaEventArgs e)
+		private void OnAttachToReplica(object sender, ReplicaEventArgs e)
 		{
 			if (e.Replica.Pid == null)
 				return;
+			
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-			await TyeExplorerServices.Get<DebuggerAttacher>().Attach(e.Replica);
+			TyeExplorerServices.Get<DebuggerAttacher>().Attach(e.Replica);
 		}
 		
-		private async void OnAttachToService(object sender, ServiceEventArgs e)
+		private void OnAttachToService(object sender, ServiceEventArgs e)
 		{
-			await TyeExplorerServices.Get<DebuggerAttacher>().Attach(e.Service.Replicas.Values);
+            ThreadHelper.ThrowIfNotOnUIThread();
+			TyeExplorerServices.Get<DebuggerAttacher>().Attach(e.Service.Replicas.Values);
 		}
 		
-		private async void OnShowServiceLogs(object sender, ServiceEventArgs e)
+		private void OnShowServiceLogs(object sender, ServiceEventArgs e)
 		{
-			await TyeExplorerServices.Get<TyeServiceOutputManager>().Attach(e.Service);
+			ThreadHelper.ThrowIfNotOnUIThread();
+			TyeExplorerServices.Get<TyeServiceOutputManager>().Attach(e.Service);
 		}
 
 		private void OnSelectedItemChanged(object sender, ItemEventArgs e)
