@@ -40,7 +40,9 @@ namespace TyeExplorer.Services
 			
 			if(_output.TryGetValue(service.Description.Name, out var connector))
 			{
-				connector.Resume();
+				// Ensure logging poller is running
+				connector.Start();
+
 				var existingPaneId = connector.PaneId;
 				outWindow.GetPane(ref existingPaneId, out var existingPane);
 				existingPane.Activate();

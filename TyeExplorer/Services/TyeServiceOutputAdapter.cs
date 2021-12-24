@@ -72,9 +72,7 @@ namespace TyeExplorer.Services
 			if (oldService == null)
 			{
 				Log("Service reappeared.");
-
-				IsRunning = true;
-				StartPoller();
+                Start();
 			}
 
 			if (newService == null)
@@ -84,62 +82,70 @@ namespace TyeExplorer.Services
 			}
 		}
 
-		private async void StartPoller()
+		private async Task PollerRunnerAsync()
 		{
-			if (_cancellationTokenSource != null)
+			if (_cancellationTokenSource != null || IsRunning)
 				return;
 
 			_cancellationTokenSource = new CancellationTokenSource();
 
 			var comboSource = CancellationTokenSource.CreateLinkedTokenSource(_cancellationToken, _cancellationTokenSource.Token);
 			var token = comboSource.Token;
+			
+            try
+            {
+                IsRunning = true;
 
-			while (!token.IsCancellationRequested)
-			{
-				try
-				{
-					var response = await _client.GetAsync($"logs/{ServiceName}", token);
-					response.EnsureSuccessStatusCode();
+                while (!token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        var response = await _client.GetAsync($"logs/{ServiceName}", token);
+                        response.EnsureSuccessStatusCode();
 
-					var lines = await DeserializeResponse<string[]>(response);
+                        var lines = await DeserializeResponse<string[]>(response);
 
-					if (lines.Length == 0 || lines[0] != _firstLine)
-					{
-						_lineCount = 0;
-					}
+                        if (lines.Length == 0 || lines[0] != _firstLine)
+                        {
+                            _lineCount = 0;
+                        }
 
-					if (lines.Length > 0)
-					{
-						_firstLine = lines[0];
-					}
+                        if (lines.Length > 0)
+                        {
+                            _firstLine = lines[0];
+                        }
 
-					foreach (var line in lines.Skip(_lineCount))
-					{
-						Log(line);
-					}
+                        foreach (var line in lines.Skip(_lineCount))
+                        {
+                            Log(line);
+                        }
 
-					_lineCount = lines.Length;
+                        _lineCount = lines.Length;
 
-					token.ThrowIfCancellationRequested();
-				}
-				catch (Exception e)
-				{
-					Log($"Polling failed: {e.Message}");
-					_cancellationTokenSource = null;
-					return;
-				}
+                        token.ThrowIfCancellationRequested();
+                    }
+                    catch (Exception e)
+                    {
+                        Log($"Polling failed: {e.Message}");
+                        return;
+                    }
 
-				try
-				{
-					await Task.Delay(LogPollingInterval, token);
-				}
-				catch (TaskCanceledException)
-				{
-					_cancellationTokenSource = null;
-					return;
-				}
-			}
-		}
+                    try
+                    {
+                        await Task.Delay(LogPollingInterval, token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        return;
+                    }
+                }
+            }
+            finally
+            {
+                IsRunning = false;
+                _cancellationTokenSource = null;
+            }
+        }
 
 
 		private async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
@@ -163,30 +169,8 @@ namespace TyeExplorer.Services
 		{
 			if (Service == null || IsRunning)
 				return;
-
-			IsRunning = true;
-
-			StartPoller();
-		}
-
-		public void Resume()
-		{
-			if (Service == null || IsRunning)
-				return;
-
-			IsRunning = true;
-
-			StartPoller();
-		}
-
-		public void Stop()
-		{
-			if (!IsRunning)
-				return;
-
-			IsRunning = false;
-
-			StopPoller();
+			
+			_ = Task.Run(PollerRunnerAsync, _cancellationToken);
 		}
 	}
 }
