@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="TimsTyeExplorer.3754379a-9eb2-4bed-9e52-61a97a6bfc61" Version="0.4" Language="en-US" Publisher="Tim Potze" />
-        <DisplayName>Tim's Tye Explorer</DisplayName>
-        <Description xml:space="preserve"> Explore Tye services and attach to Tye processes. Open the explorer through "View -&gt; Other Windows -&gt; Tye Explorer"</Description>
+        <Identity Id="TimsTyeExplorer.3754379a-9eb2-4bed-9e52-61a97a6bfc61" Version="0.5" Language="en-US" Publisher="Tim Potze" />
+        <DisplayName>Tim's Tye Explorer (Visual Studio 2019)</DisplayName>
+        <Description xml:space="preserve">Explore Tye services and attach to Tye processes. Open the explorer through "View -&gt; Other Windows -&gt; Tye Explorer"</Description>
         <MoreInfo>https://github.com/ikkentim/vs-tye-explorer</MoreInfo>
         <License>LICENSE.txt</License>
         <Icon>TimsTyeExplorerLogo.png</Icon>
